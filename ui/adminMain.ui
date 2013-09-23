@@ -23,13 +23,13 @@
     </rect>
    </property>
    <widget class="QWidget" name="page">
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>320</x>
        <y>40</y>
-       <width>139</width>
-       <height>62</height>
+       <width>142</width>
+       <height>291</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
@@ -41,15 +41,36 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btnCrudUsuarios">
+       <widget class="QPushButton" name="btnCrudAlumnos">
         <property name="text">
-         <string>USUARIO</string>
+         <string>ALUMNOS</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnCrudProfesores">
+        <property name="text">
+         <string>PROFESORES</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnCrudGrupos">
+        <property name="text">
+         <string>GRUPOS</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnCrudLaboratorios">
+        <property name="text">
+         <string>LABORATORIOS</string>
         </property>
        </widget>
       </item>
      </layout>
     </widget>
-    <widget class="QLabel" name="label_5">
+    <widget class="QLabel" name="label_path">
      <property name="geometry">
       <rect>
        <x>5</x>

@@ -11,7 +11,6 @@ class Login(QtGui.QDialog):
         db = dbconnection()
         db.connect("localhost", "trunk")
         self.tablemodel = db.gettablemodel("administrators")
-        print(self.tablemodel.lastError().text())
 
         QtGui.QDialog.__init__(self, parent)
         self.ui = Ui_CetiDialog()
@@ -29,22 +28,11 @@ class Login(QtGui.QDialog):
         storedpassword = str(record.value("password").toString())
 
         if encrypted == storedpassword:
-            '''
-            self.msg = alerthandler()
-            self.msg.setinfo("User login successfull")
-            self.msg.show()
-            '''
             self.forma = System()
             self.forma.show()
             self.hide()
         else:
-            '''
-            self.msg = alerthandler()
-            self.msg.setinfo("Login failed")
-            self.msg.show()
-            '''
-            self.ui.labelError.setText("ERROR: Usuario y/o password invalidos")  
-            print(self.tablemodel.lastError().text())
+            self.ui.labelError.setText("ERROR: Usuario y/o password invalidos")
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)

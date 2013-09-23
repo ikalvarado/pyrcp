@@ -9,10 +9,8 @@ class crudbase(QtGui.QWidget):
     def __init__(self, parent = None, userinterface = None, databasename = "", tablename = ""):
         if(not inspect.isclass(userinterface) or type(databasename) != str or type(tablename) != str):
             print("Unacceptable parameters")
-            sys.exit()
         if(userinterface is None or databasename == "" or tablename == ""):
             print("Unacceptable parameters")
-            sys.exit()
         db = dbconnection()
         db.connect("localhost", "trunk")
         self.tablemodel = db.gettablemodel(tablename)
@@ -52,15 +50,19 @@ class crudbase(QtGui.QWidget):
 
     def updateChanges(self):
         self.tablemodel.submitAll()
+        print(self.tablemodel.lastError().text())
 
     def cancelChanges(self):
         self.tablemodel.revertAll()
+        print(self.tablemodel.lastError().text())
 
     def createRecords(self):
         self.tablemodel.insertRow(self.tablemodel.rowCount())
+        print(self.tablemodel.lastError().text())
 
     def deleteRecords(self):
         self.tablemodel.removeRow(self.ui.tableView.currentIndex().row())
+        print(self.tablemodel.lastError().text())
 
     def filterRecords(self, text):
         columnname = self.ui.fieldSelect.itemData(self.ui.fieldSelect.currentIndex()).toString()

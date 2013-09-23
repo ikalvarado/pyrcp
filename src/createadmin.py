@@ -28,6 +28,9 @@ class createadmin(QtGui.QWidget):
         if hasattr(self.ui, "verify"):
             QtCore.QObject.connect(self.ui.verify, QtCore.SIGNAL('textChanged(const QString&)'), self.compare)
 
+    def set_parent_callback(self, callback_function):
+        self.parent_callback_function = callback_function
+
     def compare(self, verify):
         if verify == "":
             self.ui.info.setPixmap(QtGui.QPixmap(None))
@@ -60,6 +63,7 @@ class createadmin(QtGui.QWidget):
         newrecord.setValue("password", encrypted)
         self.tablemodel.insertRecord(-1, newrecord)
         self.tablemodel.submitAll()
+        self.parent_callback_function()
         self.close()
 
 if __name__ == "__main__":

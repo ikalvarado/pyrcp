@@ -26,6 +26,7 @@ class dbconnection:
                 print("Error: a database connection to another database is active")
                 print("new: " + new)
                 print("old: " + old)
+                sys.exit()
         else:
             self.db.open()
         print(self.db.lastError().text())

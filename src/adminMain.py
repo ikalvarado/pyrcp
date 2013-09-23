@@ -1,32 +1,23 @@
 import sys
+from sliderbase import *
 from adminMainUi import *
 from admincrud import *
 from crudbase import *
 
-class adminMain(QtGui.QWidget):
-    def __init__(self, parent=None):
+class adminMain(sliderbase):
+    def __init__(self, parent = None):
         QtGui.QWidget.__init__(self, parent)
         self.ui = Ui_AdminMain()
         self.ui.setupUi(self)
 
-        self.signal_mapper = QtCore.QSignalMapper(self)
-        self.views = [
+        views = [
                 (admincrud(None, Ui_crudbase, "trunk", "administrators"), self.ui.btnCrudAdmin),
-                (crudbase(None, Ui_crudbase, "trunk", "alumnos"), self.ui.btnCrudUsuarios)
+                (crudbase(None, Ui_crudbase, "trunk", "alumnos"), self.ui.btnCrudAlumnos),
+                (crudbase(None, Ui_crudbase, "trunk", "profesores"), self.ui.btnCrudProfesores),
+                (crudbase(None, Ui_crudbase, "trunk", "grupos"), self.ui.btnCrudGrupos),
+                (crudbase(None, Ui_crudbase, "trunk", "laboratorios"), self.ui.btnCrudLaboratorios),
             ]
-
-        for i, v in enumerate(self.views):
-            self.ui.stackedWidgetAdmin.addWidget(v[0])
-            self.signal_mapper.setMapping(v[1], i)
-            v[1].clicked.connect(self.signal_mapper.map)
-
-        self.signal_mapper.mapped.connect(self.show_stack_section)
-
-    def show_stack_section(self, view_select):
-        self.ui.stackedWidgetAdmin.setCurrentIndex(view_select + 2)
-
-    def reset(self):
-        self.ui.stackedWidgetAdmin.setCurrentIndex(0)
+        self.slider_setup(views, 1, self.ui.stackedWidgetAdmin)
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)

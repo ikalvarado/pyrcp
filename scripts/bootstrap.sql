@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS equipos (
 CREATE TABLE IF NOT EXISTS laboratorios (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nombre CHARACTER(50),
-    seccion  CHARACTER(50)
+    seccion CHARACTER(50)
 );
 
 CREATE TABLE IF NOT EXISTS grupos_profesores (

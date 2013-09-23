@@ -15,6 +15,7 @@ class admincrud(crudbase):
 
     def createRecords(self):
         self.prompt = createadmin(None, Ui_createadmin, "trunk", "administrators")
+        self.prompt.set_parent_callback(self.updateChanges)
         self.prompt.show()
 
 if __name__ == "__main__":
