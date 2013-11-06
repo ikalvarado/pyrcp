@@ -9,7 +9,7 @@ def printChildren(obj, indent):
 
     for child in children:
         if "PyQt4" not in str(child.__class__):
-            print indent, child.objectName(), child.__class__
+            print(indent, child.objectName(), child.__class__)
             if hasattr(child, "reset"):
                 child.reset()
         printChildren(child, indent + "  ")

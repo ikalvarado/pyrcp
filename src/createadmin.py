@@ -56,7 +56,7 @@ class createadmin(QtGui.QWidget):
             return
 
         # encrypt password
-        encrypted = hashlib.sha256(password).hexdigest()
+        encrypted = hashlib.sha256(password.encode("utf-8")).hexdigest()
 
         newrecord = self.tablemodel.record()
         newrecord.setValue("user_name", username)
