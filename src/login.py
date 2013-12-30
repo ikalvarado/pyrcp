@@ -25,7 +25,10 @@ class Login(QtGui.QDialog):
         # encrypt password
         encrypted = hashlib.sha256(str(self.ui.tbPass.text()).encode("utf-8")).hexdigest()
         record = self.tablemodel.record(0)
-        storedpassword = str(record.value("password"))
+        try:
+            storedpassword = str(record.value("password").toString())
+        except:
+            storedpassword = str(record.value("password"))
 
         if encrypted == storedpassword:
             self.forma = System()

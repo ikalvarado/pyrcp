@@ -27,7 +27,10 @@ class crudbase(QtGui.QWidget):
         for i in range(self.tablemodel.columnCount()):
             if i == 0:
                 continue
-            oldcolumnname = self.tablemodel.headerData(i, QtCore.Qt.Horizontal)
+            try:
+                oldcolumnname = self.tablemodel.headerData(i, QtCore.Qt.Horizontal).toString()
+            except:
+                oldcolumnname = self.tablemodel.headerData(i, QtCore.Qt.Horizontal)
             newcolumnname =  str(oldcolumnname).replace("_", " ").title()
             self.tablemodel.setHeaderData(i, QtCore.Qt.Horizontal, newcolumnname)
             self.ui.fieldSelect.addItem(newcolumnname, oldcolumnname)
@@ -65,7 +68,10 @@ class crudbase(QtGui.QWidget):
         print(self.tablemodel.lastError().text())
 
     def filterRecords(self, text):
-        columnname = self.ui.fieldSelect.itemData(self.ui.fieldSelect.currentIndex())
+        try:
+            columnname = self.ui.fieldSelect.itemData(self.ui.fieldSelect.currentIndex()).toString()
+        except:
+            columnname = self.ui.fieldSelect.itemData(self.ui.fieldSelect.currentIndex())
         self.tablemodel.setFilter(columnname + " like '%" + text + "%'")
 
     def sortColumn(self, column):
