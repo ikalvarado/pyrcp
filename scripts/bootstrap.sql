@@ -78,5 +78,3 @@ CREATE TABLE IF NOT EXISTS historial (
     FOREIGN KEY(alumno_id) REFERENCES alumnos(id),
     FOREIGN KEY(equipo_id) REFERENCES equipos(id)
 );
-
-INSERT INTO administrators (id, user_name, password) VALUES(NULL, "boot", "ce8f5a764a51a77c7e11566ee189b20e282b6678f05a27e2965a35315e4a264f");

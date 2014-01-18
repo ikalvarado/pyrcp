@@ -1,0 +1,115 @@
+#!/usr/bin/python
+''' Utility script '''
+import sys
+import argparse
+import os
+import shutil
+import sqlite3
+import hashlib
+import subprocess
+
+DATABASE_DIRECTORY = 'database'
+DATABASE_NAME = 'trunk.db'
+SQLSCRIPT_DIRECTORY = 'scripts'
+SQLSCRIPT_NAME = 'bootstrap.sql'
+TABLE_NAME = 'administrators'
+
+def execute(cmd):
+    ''' Executes as shell command '''
+    prc = subprocess.Popen(cmd, shell=True,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    (stdout, stderr) = prc.communicate()
+    return (prc.returncode, stdout, stderr)
+
+def insert_default_user(args):
+    ''' Inserts the default user into the table '''
+    connection = sqlite3.connect(
+            os.path.join(DATABASE_DIRECTORY, DATABASE_NAME))
+    cursor = connection.cursor()
+
+    sql = 'INSERT INTO %s (id,user_name,password) VALUES(NULL,"%s","%s");' % (
+            TABLE_NAME,
+            args.user,
+            hashlib.sha256(args.password.encode('utf-8')).hexdigest())
+
+    cursor.execute(sql)
+    connection.commit()
+    connection.close()
+
+def install(args):
+    ''' Installs the pyrcp system '''
+    if os.path.exists(DATABASE_DIRECTORY):
+        print('It seems that an installation already exists')
+        return 1
+    sqlscript = os.path.join(SQLSCRIPT_DIRECTORY, SQLSCRIPT_NAME)
+    if not os.path.exists(sqlscript):
+        print('Unable to find a dependency, unpack the contents again')
+        return 1
+    os.makedirs(DATABASE_DIRECTORY)
+    data = execute('sqlite3 %s < %s' % (
+            os.path.join(DATABASE_DIRECTORY, DATABASE_NAME),
+            sqlscript))
+    if data[0] != 0:
+        print('Command failed, please make sure that sqlite3 is installed')
+        return 1
+
+    try:
+        insert_default_user(args)
+    except sqlite3.Error as exc:
+        print('Error while inserting the default user: %s' % str(exc))
+        return 1
+    print('Installation complete')
+    print('  username: %s' % args.user)
+    print('  password: %s' % args.password)
+    return 0
+
+def remove(args):
+    ''' Removes the current installation'''
+    if args.force == True:
+        if os.path.exists(DATABASE_DIRECTORY):
+            shutil.rmtree(DATABASE_DIRECTORY)
+        return 0
+
+    print('Are you sure that you want to remove the current installation?')
+    approve = input('This action cannot be undone (y/N): ')
+
+    if(approve != 'y'):
+        print('Operation cancelled on user request')
+        return 1
+    if os.path.exists(DATABASE_DIRECTORY):
+        shutil.rmtree(DATABASE_DIRECTORY)
+    return 0
+
+def installparser(subparsers):
+    ''' Creates the install subparser '''
+    parser = subparsers.add_parser('install',
+            help='installs the system')
+    parser.add_argument('-u', '--user', dest='user', default='boot',
+            help='optional base administrator')
+    parser.add_argument('-p', '--password', dest='password', default='b00tstr4p',
+            help='optional base password')
+    parser.set_defaults(subfunction=install)
+
+def removeparser(subparsers):
+    ''' Creates the remove suboparser '''
+    parser = subparsers.add_parser('remove',
+            help='removes the currrent installation')
+    parser.add_argument('-f', '--force', dest='force', action='store_true',
+            help='forces the removal of the installation')
+    parser.set_defaults(subfunction=remove)
+
+def main():
+    ''' Executes the subcommand '''
+    parser = argparse.ArgumentParser(description='PyRCP utility script')
+    subparsers = parser.add_subparsers(metavar='COMMAND',
+            help='available commands')
+    subparsers.required = True
+    installparser(subparsers)
+    removeparser(subparsers)
+
+    args = parser.parse_args()
+
+    return args.subfunction(args)
+
+if __name__ == '__main__':
+    sys.exit(main())
